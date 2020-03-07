@@ -106,5 +106,10 @@ for srcDir in PROJ_SRC_DIR + [DRV_SRC_DIR]:
         print(res.stdout.decode("utf-8"), end='')
 
 # Linking object files
-if "-v" in sys.argv: print("Linking %s ..." % "main.ihx")
-subprocess.run(cmd + objList + ["-o", BUILD_DIR + "main.ihx"])
+outFile = "main.ihx"
+if "-v" in sys.argv: print("Linking %s ..." % outFile)
+subprocess.run(cmd + objList + ["-o", BUILD_DIR + outFile])
+
+# Optionally use srec_cat to get binary form
+subprocess.run(["srec_cat", "-disable-sequence-warning", BUILD_DIR + outFile, "-intel", 
+    "-offset", "-0x8000", "-o", BUILD_DIR + outFile + ".bin", "-binary"])
