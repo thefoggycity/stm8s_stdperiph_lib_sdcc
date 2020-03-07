@@ -47,9 +47,11 @@ MODEL_DIC = {
     "stm8s_uart4.c" :
         ["STM8AF622x"]
 }
-MODELS = set()
-for s in MODEL_DIC.values(): 
-    for c in s: MODELS.add(c)
+MODELS = {
+    'STM8AF62Ax', 'STM8S903', 'STM8S007', 'STM8S003', 'STM8S208', 
+    'STM8S005', 'STM8S103', 'STM8S001', 'STM8S105', 'STM8S207', 
+    'STM8AF626x', 'STM8AF52Ax', 'STM8AF622x'
+}
 
 with open("./.vscode/c_cpp_properties.json") as confFile:
     confs = json.load(confFile)['configurations']
