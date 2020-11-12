@@ -10,7 +10,7 @@ $SrcDir =
     $DrvSrcDir, 
     ".\Src"
 $DefChipModel = 
-    "STM8S003"
+    "STM8S103"
 $ExtraDefs = 
     @() # Definitions other than chip model
 $Opts = 
@@ -23,40 +23,42 @@ $BuildDir =
 $DrvSrcs = @(
     # Sources that are applicable to all models
     # Comment/Delete the peripherals that are not used to reduce code size
-    "stm8s_awu.c", "stm8s_beep.c", "stm8s_clk.c", "stm8s_exti.c", "stm8s_flash.c",
-    "stm8s_gpio.c", "stm8s_i2c.c", "stm8s_itc.c", "stm8s_iwdg.c", "stm8s_rst.c", 
-    "stm8s_spi.c", "stm8s_tim1.c", "stm8s_wwdg.c"
+    # "stm8s_awu.c", "stm8s_beep.c", 
+    "stm8s_clk.c", "stm8s_exti.c",# "stm8s_flash.c",
+    "stm8s_gpio.c",# "stm8s_i2c.c", "stm8s_itc.c", "stm8s_iwdg.c", 
+    "stm8s_rst.c"#, 
+    # "stm8s_spi.c", "stm8s_tim1.c", "stm8s_wwdg.c"
 )
 $ModelHash = @{
     # Sources that are only applicable to selective models
     # Comment/Delete the peripherals that are not used to reduce code size
-    "stm8s_adc1.c" = 
-        "STM8S105", "STM8S005", "STM8S103", "STM8S003", "STM8S001", 
-        "STM8S903", "STM8AF626x", "STM8AF622x";
-    "stm8s_adc2.c" = 
-        "STM8S208", "STM8S207", "STM8S007", "STM8AF52Ax", "STM8AF62Ax";
-    "stm8s_can.c" = 
-        "STM8S208", "STM8AF52Ax";
+    # "stm8s_adc1.c" = 
+    #     "STM8S105", "STM8S005", "STM8S103", "STM8S003", "STM8S001", 
+    #     "STM8S903", "STM8AF626x", "STM8AF622x";
+    # "stm8s_adc2.c" = 
+    #     "STM8S208", "STM8S207", "STM8S007", "STM8AF52Ax", "STM8AF62Ax";
+    # "stm8s_can.c" = 
+    #     "STM8S208", "STM8AF52Ax";
     "stm8s_tim2.c" = 
-        "STM8S903", "STM8AF622x";
-    "stm8s_tim3.c" = 
-        "STM8S208", "STM8S207", "STM8S007", "STM8S105", "STM8S005", 
-        "STM8AF52Ax", "STM8AF62Ax", "STM8AF626x";
-    "stm8s_tim4.c" = 
-        "STM8S903", "STM8AF622x";
-    "stm8s_tim5.c" = 
-        "STM8S903", "STM8AF622x";
-    "stm8s_tim6.c" = 
-        "STM8S903", "STM8AF622x";
-    "stm8s_uart1.c" = 
-        "STM8S208", "STM8S207", "STM8S007", "STM8S103", "STM8S003", 
-        "STM8S001", "STM8S903", "STM8AF52Ax", "STM8AF62Ax";
-    "stm8s_uart2.c" = 
-        "STM8S105", "STM8S005", "STM8AF626x";
-    "stm8s_uart3.c" = 
-        "STM8S208", "STM8S207", "STM8S007", "STM8AF52Ax", "STM8AF62Ax";
-    "stm8s_uart4.c" = 
-        "STM8AF622x"
+        "STM8S103", "STM8S903", "STM8AF622x";
+    # "stm8s_tim3.c" = 
+    #     "STM8S208", "STM8S207", "STM8S007", "STM8S105", "STM8S005", 
+    #     "STM8AF52Ax", "STM8AF62Ax", "STM8AF626x";
+    # "stm8s_tim4.c" = 
+    #     "STM8S903", "STM8AF622x";
+    # "stm8s_tim5.c" = 
+    #     "STM8S903", "STM8AF622x";
+    # "stm8s_tim6.c" = 
+    #     "STM8S903", "STM8AF622x";
+    # "stm8s_uart1.c" = 
+    #     "STM8S208", "STM8S207", "STM8S007", "STM8S103", "STM8S003", 
+    #     "STM8S001", "STM8S903", "STM8AF52Ax", "STM8AF62Ax";
+    # "stm8s_uart2.c" = 
+    #     "STM8S105", "STM8S005", "STM8AF626x";
+    # "stm8s_uart3.c" = 
+    #     "STM8S208", "STM8S207", "STM8S007", "STM8AF52Ax", "STM8AF62Ax";
+    # "stm8s_uart4.c" = 
+    #     "STM8AF622x"
 }
 $ModelHash.Keys | ForEach-Object {
     if ($DefChipModel -in $ModelHash.$_) {$DrvSrcs += $_}
@@ -97,7 +99,9 @@ $ObjDirList | ForEach-Object {
 
 Write-Output "Linking..."
 $OutFile = "$BuildDir\main.ihx"
+$OutFileElf = "$BuildDir\main.elf"
 Start-Process "sdcc.exe" -ArgumentList $($Opts + $ObjList + " -o" + $OutFile) -Wait -NoNewWindow
+Start-Process "sdcc.exe" -ArgumentList $($Opts + $ObjList + " -o" + $OutFileElf + " --out-fmt-elf") -Wait -NoNewWindow
 
 # Optionally convert the Intel Hex output to binary
 Write-Output "Writing binary file..."

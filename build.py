@@ -27,7 +27,7 @@ MODEL_DIC = {
     "stm8s_can.c" :
         ["STM8S208", "STM8AF52Ax"],
     "stm8s_tim2.c" :
-        ["STM8S903", "STM8AF622x"],
+        ["STM8S103", "STM8S903", "STM8AF622x"],
     "stm8s_tim3.c" :
         ["STM8S208", "STM8S207", "STM8S007", "STM8S105", "STM8S005", 
         "STM8AF52Ax", "STM8AF62Ax", "STM8AF626x"],
@@ -109,6 +109,7 @@ for srcDir in PROJ_SRC_DIR + [DRV_SRC_DIR]:
 outFile = "main.ihx"
 if "-v" in sys.argv: print("Linking %s ..." % outFile)
 subprocess.run(cmd + objList + ["-o", BUILD_DIR + outFile])
+subprocess.run(cmd + objList + ["-o", BUILD_DIR + outFile[0:-4] + ".elf", "--out-fmt-elf"])
 
 # Optionally use srec_cat to get binary form
 subprocess.run(["srec_cat", "-disable-sequence-warning", BUILD_DIR + outFile, "-intel", 
